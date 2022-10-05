@@ -1,0 +1,2 @@
+export * from './LayoutBasePaginas';
+
