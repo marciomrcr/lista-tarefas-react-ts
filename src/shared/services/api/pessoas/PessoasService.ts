@@ -1,14 +1,14 @@
 import { Environment } from "../../../environment";
 import { Api } from "../axios-config";
 
-interface IDetalhePessoa {
+export interface IDetalhePessoa {
   id: number;
   email: string;
   cidadeId: number;
   nomeCompleto: string;
 }
 
-interface IListagemPessoa {
+export interface IListagemPessoa {
   id: number;
   email: string;
   cidadeId: number;
@@ -25,7 +25,7 @@ const getAll = async (
   filter = ""
 ): Promise<TPessoasComTotalCount | Error> => {
   try {
-    const urlRelativa = `/pessoa?_page=${page}$_limit=${Environment.LIMITE_DE_LINHAS}&nomeCompleto_like=${filter}`;
+    const urlRelativa = `/pessoas?_page=${page}$_limit=${Environment.LIMITE_DE_LINHAS}&nomeCompleto_like=${filter}`;
 
     const { data, headers } = await Api.get(urlRelativa);
 
@@ -105,10 +105,10 @@ const deleteById = async (id: number): Promise<void | Error> => {
   }
 };
 
-export const PessoasService = () => {
-  getAll;
-  getById;
-  create;
-  updateById;
-  deleteById;
+export const PessoasService = {
+  getAll,
+  getById,
+  create,
+  updateById,
+  deleteById,
 };
