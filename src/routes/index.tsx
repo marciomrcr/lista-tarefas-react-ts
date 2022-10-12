@@ -29,6 +29,7 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/home" element={<Dashboard />} />
       <Route path="/pessoas" element={<ListagemDePessoas />} />
+      <Route path="/pessoas/detalhes/:id" element={<p>Detalhes</p>} />
       <Route path="/cidades" element={<ListagemDeCidades />} />
       {/* "Rotas desconhecidas faz o Redirect to Home" */}
       <Route path="*" element={<Navigate to="/home" />} />

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FerramentasDaListagem } from "../../shared/components";
 import { useDebounce } from "../../shared/hooks";
 import { LayoutBasePaginas } from "../../shared/layouts";
@@ -9,7 +9,10 @@ import {
 } from "../../shared/services/api/pessoas/PessoasService";
 
 import {
+  Icon,
+  IconButton,
   LinearProgress,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -19,12 +22,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { margin } from "@mui/system";
 import { Environment } from "../../shared/environment";
 
 export const ListagemDePessoas = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
+  const navigate = useNavigate();
 
   const [rows, setRows] = useState<IListagemPessoa[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -34,10 +37,15 @@ export const ListagemDePessoas = () => {
     return searchParams.get("busca") || "";
   }, [searchParams]);
 
+  const pagina = useMemo(() => {
+    return Number(searchParams.get("pagina") || "1");
+  }, [searchParams]);
+
   useEffect(() => {
     setIsLoading(true);
+
     debounce(() => {
-      PessoasService.getAll(1, busca).then((result) => {
+      PessoasService.getAll(pagina, busca).then((result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -50,7 +58,24 @@ export const ListagemDePessoas = () => {
         }
       });
     });
-  }, [busca]);
+  }, [busca, pagina]);
+
+  const handleDelete = (id: number) =>{
+    if(confirm('Deseja excluir o registro?' )){
+      PessoasService.deleteById(id)
+      .then(result => {
+        if(result instanceof Error){
+          alert(result.message);
+        } else {
+          setRows(oldRows =>  [
+            ...oldRows.filter(oldRow => oldRow.id !== id),
+          ]);
+
+          alert('Registro excluído com sucesso!')
+        }
+      })
+    }
+  }
 
   return (
     <LayoutBasePaginas
@@ -61,7 +86,7 @@ export const ListagemDePessoas = () => {
           textoBotaoNovo="Nova"
           textoDaBusca={busca}
           aoMudarTextoBusca={(texto) =>
-            setSearchParams({ busca: texto }, { replace: true })
+            setSearchParams({ busca: texto, pagina: "1" }, { replace: true })
           }
         />
       }
@@ -72,8 +97,8 @@ export const ListagemDePessoas = () => {
         sx={{ margin: 1, width: "auto" }}
       >
         <Table>
-          <TableHead>
-            <TableRow>
+          <TableHead >
+            <TableRow >
               <TableCell>Ações</TableCell>
               <TableCell>Nome Completo</TableCell>
               <TableCell>Email</TableCell>
@@ -82,7 +107,18 @@ export const ListagemDePessoas = () => {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>Ações</TableCell>
+                <TableCell >
+                  <IconButton 
+                  size="small"
+                  onClick={() => handleDelete(row.id)}
+                  >
+                    <Icon>delete</Icon>
+                  </IconButton>
+                  <IconButton size="small" 
+                  onClick={() => navigate(`/pessoas/detalhes/${row.id}`)}>
+                    <Icon>edit</Icon>
+                  </IconButton>
+                </TableCell>
                 <TableCell>{row.nomeCompleto}</TableCell>
                 <TableCell>{row.email}</TableCell>
               </TableRow>
@@ -97,6 +133,23 @@ export const ListagemDePessoas = () => {
               <TableRow>
                 <TableCell colSpan={3}>
                   <LinearProgress variant="indeterminate" />
+                </TableCell>
+              </TableRow>
+            )}
+            {/*  prettier-ignore */}
+            {(totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHAS) && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination
+                    page={pagina}
+                    count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
+                    onChange={(e, newPage) =>
+                      setSearchParams(
+                        { busca, pagina: newPage.toString() },
+                        { replace: true }
+                      )
+                    }
+                  />
                 </TableCell>
               </TableRow>
             )}
