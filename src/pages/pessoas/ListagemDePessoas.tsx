@@ -83,8 +83,9 @@ export const ListagemDePessoas = () => {
       barraDeFerramentas={
         <FerramentasDaListagem
           mostraInputBusca
-          textoBotaoNovo="Nova"
           textoDaBusca={busca}
+          textoBotaoNovo="Nova"
+          aoClicarEmNovo={() => navigate(`/pessoas/detalhes/nova`) }
           aoMudarTextoBusca={(texto) =>
             setSearchParams({ busca: texto, pagina: "1" }, { replace: true })
           }
