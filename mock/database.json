@@ -1,18 +1,6 @@
 {
   "pessoas": [
     {
-      "id": 4,
-      "email": "pedro@oi.com.br",
-      "cidadeId": 2,
-      "nomeCompleto": "Pedro Rodrigues"
-    },
-    {
-      "id": 6,
-      "email": "antonioo@oi.com.br",
-      "cidadeId": 2,
-      "nomeCompleto": "Antonio Rodrigues"
-    },
-    {
       "id": 7,
       "email": "carlos@oi.com.br",
       "cidadeId": 1,

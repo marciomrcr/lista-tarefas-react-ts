@@ -54,7 +54,7 @@ export const DetalhesDePessoas: React.FC = () => {
   return(
     
     <LayoutBasePaginas
-    titulo={id === 'nova' ? 'Nova Pessoa': nome}
+    titulo={id === 'nova' ? 'Novo Cadastro': nome}
     barraDeFerramentas={
       <FerramentasDeDetalhes
       textoBotaoNovo="Nova"
@@ -75,7 +75,7 @@ export const DetalhesDePessoas: React.FC = () => {
       <LinearProgress variant="indeterminate"/>
       )}
 
-      <p>Detalhes</p>
+      <p>Detalhes do cadastro {id}</p>
     </LayoutBasePaginas>
   )
 }

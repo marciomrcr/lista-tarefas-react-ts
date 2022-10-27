@@ -79,15 +79,15 @@ export const ListagemDePessoas = () => {
 
   return (
     <LayoutBasePaginas
-      titulo="Lista de Pessoas"
+      titulo="Lista de Clientes"
       barraDeFerramentas={
         <FerramentasDaListagem
           mostraInputBusca
           textoDaBusca={busca}
-          textoBotaoNovo="Nova"
+          textoBotaoNovo="Novo Cadastro"
           aoClicarEmNovo={() => navigate(`/pessoas/detalhes/nova`) }
           aoMudarTextoBusca={(texto) =>
-            setSearchParams({ busca: texto, pagina: "1" }, { replace: true })
+          setSearchParams({ busca: texto, pagina: "1" }, { replace: true })
           }
         />
       }
